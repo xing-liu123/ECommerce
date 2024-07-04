@@ -11,6 +11,7 @@ router.post("/register", async (req: Request, res: Response) => {
 
   try {
     const user = await UserModel.findOne({ username });
+    
 
     if (user) {
       return res.status(400).json({ type: UserErrors.USERNAME_ALREADY_EXISTS });
