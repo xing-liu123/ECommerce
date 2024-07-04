@@ -4,7 +4,7 @@ import { ProductModel } from "../models/product";
 
 const router = Router();
 
-router.get("/products", verifyToken, async (req: Request, res: Response) => {
+router.get("/", verifyToken, async (req: Request, res: Response) => {
   try {
     const products = await ProductModel.find({});
 
@@ -13,3 +13,5 @@ router.get("/products", verifyToken, async (req: Request, res: Response) => {
     res.status(400).json({ type: err });
   }
 });
+
+export { router as productRouter };
