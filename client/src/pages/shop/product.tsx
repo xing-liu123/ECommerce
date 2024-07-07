@@ -16,6 +16,14 @@ export const Product = (props: Props) => {
         <p>{description}</p>
         <p>${price}</p>
       </div>
+
+      {stockQuantity > 0 ? (
+        <button className="add-to-cart-button">Add To Cart</button>
+      ) : (
+        <div className="stock-quantity">
+          <h2>OUT OF STOCK</h2>
+        </div>
+      )}
     </div>
   );
 };
