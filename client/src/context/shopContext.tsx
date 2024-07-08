@@ -5,7 +5,7 @@ export interface IShopContext {
   removeFromCart: (itemID: string) => void;
   updateCartItemCount: (newAmount: number, itemID: string) => void;
   getCartItemCount: (itemID: string) => number;
-//   availableMoney: number;
+  //   availableMoney: number;
 }
 
 const defaultVal: IShopContext = {
@@ -13,15 +13,26 @@ const defaultVal: IShopContext = {
   removeFromCart: () => null,
   updateCartItemCount: () => null,
   getCartItemCount: () => 0,
-//   availableMoney: 0,
+  //   availableMoney: 0,
 };
 
 export const ShopContext = createContext<IShopContext>(defaultVal);
 
 export const ShopContextProvider = (props) => {
-  const [cartItems, setCartItems] = useState<{ string: number } | {}>({});
-//   const [availableMoney, setAvailableMoney] = useState<number>(0);
+  const [cartItems, setCartItems] = useState<{ [key: string]: number }>(() => {
+    const savedCartItems = localStorage.getItem("cartItems");
+    if (savedCartItems) {
+      console.log("Loading cart items from localStorage:", savedCartItems);
+      return JSON.parse(savedCartItems);
+    }
+    return {};
+  });
 
+  // Save cart items to localStorage whenever they change
+  useEffect(() => {
+    console.log("Saving cart items to localStorage:", cartItems);
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (itemID: string) => {
     if (!cartItems[itemID]) {

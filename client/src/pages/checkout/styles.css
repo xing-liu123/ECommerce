@@ -1,0 +1,97 @@
+.cart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart-item {
+  width: 700px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 25px;
+  margin: 30px;
+}
+
+.cart-item img {
+  width: 200px;
+  margin-left: 50px;
+}
+
+.cart-item .description {
+  width: 100%;
+  font-size: 30px;
+}
+
+.count {
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  padding: 20px 20px;
+  justify-content: space-evenly;
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 16px; /* Adjust font size as needed */
+  padding: 5px 10px; /* Add padding for better clickability */
+}
+
+.remove-button {
+  color: #555; /* Optional: Change color on hover for better user experience */
+}
+
+.count-handler {
+  display: flex;
+}
+
+.count-handler select {
+  padding: 5px;
+  font-size: 16px;
+  border: 2px solid rgb(19, 19, 19);
+  border-radius: 5px;
+  background-color: white;
+  color: rgb(19, 19, 19);
+  cursor: pointer;
+  min-width: 60px;
+  margin: 0 10px;
+}
+
+.count-handler select:focus {
+  outline: none;
+  border-color: rgb(19, 19, 19);
+}
+
+.count-handler button {
+  background-color: transparent;
+  border: 2px solid rgb(19, 19, 19);
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  color: rgb(19, 19, 19);
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  margin: 0 5px;
+}
+
+.count-handler button:hover {
+  background-color: rgb(19, 19, 19);
+  color: white;
+}
+
+.checkout button {
+  width: 150px;
+  height: 50px;
+  background-color: rgb(19, 19, 19);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin: 10px;
+  cursor: pointer;
+}
