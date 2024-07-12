@@ -8,8 +8,13 @@ interface Props {
 
 export const CartItem = (prop: Props) => {
   const { _id, imageURL, price, productName } = prop.product;
-  const { getCartItemCount, addToCart, removeFromCart, updateCartItemCount } =
-    useContext<IShopContext>(ShopContext);
+  const {
+    getCartItemCount,
+    addToCart,
+    removeFromCart,
+    updateCartItemCount,
+    deleteCartItem,
+  } = useContext<IShopContext>(ShopContext);
 
   const cartItemCount: number = getCartItemCount(_id);
 
@@ -37,7 +42,10 @@ export const CartItem = (prop: Props) => {
           </select>
           <button onClick={() => addToCart(_id)}> + </button>
         </div>
-        <button className="remove-button" onClick={() => updateCartItemCount(0, _id)}> Remove </button>
+        <button className="remove-button" onClick={() => deleteCartItem(_id)}>
+          {" "}
+          Remove{" "}
+        </button>
       </div>
     </div>
   );

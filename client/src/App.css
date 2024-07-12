@@ -17,6 +17,13 @@ body {
   padding: 10px;
 }
 
+.navbar-title {
+  padding-left: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+
 .navbar-links {
   display: flex;
   margin: 20px;

@@ -1,19 +1,29 @@
 import { createContext, useEffect, useState } from "react";
+import { IProduct } from "../models/interface";
+import { useGetProducts } from "../hooks/useGetProducts";
+import axios from "axios";
+import { useGetToken } from "../hooks/useGetToken";
 
 export interface IShopContext {
   addToCart: (itemID: string) => void;
   removeFromCart: (itemID: string) => void;
   updateCartItemCount: (newAmount: number, itemID: string) => void;
+  deleteCartItem: (itemID: string) => void;
   getCartItemCount: (itemID: string) => number;
-  //   availableMoney: number;
+  availableMoney: number;
+  getTotalAmount: () => number;
+  checkout: () => void;
 }
 
 const defaultVal: IShopContext = {
   addToCart: () => null,
   removeFromCart: () => null,
   updateCartItemCount: () => null,
+  deleteCartItem: () => null,
   getCartItemCount: () => 0,
-  //   availableMoney: 0,
+  availableMoney: 0,
+  getTotalAmount: () => null,
+  checkout: () => null,
 };
 
 export const ShopContext = createContext<IShopContext>(defaultVal);
@@ -27,6 +37,29 @@ export const ShopContextProvider = (props) => {
     }
     return {};
   });
+
+  const { products } = useGetProducts();
+  const { headers } = useGetToken();
+  const [availableMoney, setAvailableMoney] = useState<number>(0);
+
+  const fetchAvailableMoney = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/user/available-money/${localStorage.getItem(
+          "userID"
+        )}`,
+        { headers }
+      );
+
+      setAvailableMoney(res.data.availableMoney);
+    } catch (err) {
+      alert("ERROR: Something Went Wrong");
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableMoney();
+  }, []);
 
   // Save cart items to localStorage whenever they change
   useEffect(() => {
@@ -43,11 +76,24 @@ export const ShopContextProvider = (props) => {
   };
 
   const removeFromCart = (itemID: string) => {
-    if (!cartItems[itemID] || cartItems[itemID] === 0) {
-      return;
-    } else {
-      setCartItems((prev) => ({ ...prev, [itemID]: cartItems[itemID] - 1 }));
-    }
+    setCartItems((prev) => {
+      const newCartItems = { ...prev };
+      if (newCartItems[itemID] > 0) {
+        newCartItems[itemID] -= 1;
+        if (newCartItems[itemID] === 0) {
+          delete newCartItems[itemID];
+        }
+      }
+      return newCartItems;
+    });
+  };
+
+  const deleteCartItem = (itemID: string) => {
+    setCartItems((prev) => {
+      const newCartItems = { ...prev };
+      delete newCartItems[itemID];
+      return newCartItems;
+    });
   };
 
   const updateCartItemCount = (newAmount: number, itemID: string) => {
@@ -65,11 +111,27 @@ export const ShopContextProvider = (props) => {
     }
   };
 
+  const getTotalAmount = () => {
+    let amount = 0;
+
+    for (const item in cartItems) {
+      let itemInfo: IProduct = products.find((product) => product._id === item);
+      amount += itemInfo.price * cartItems[item];
+    }
+    return amount;
+  };
+
+  const checkout = () => {};
+
   const contextValue: IShopContext = {
     addToCart,
     removeFromCart,
     updateCartItemCount,
+    deleteCartItem,
     getCartItemCount,
+    availableMoney,
+    getTotalAmount,
+    checkout,
   };
 
   return (

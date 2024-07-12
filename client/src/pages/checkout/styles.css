@@ -1,8 +1,14 @@
+.shopping-cart {
+  display: flex;
+}
 .cart {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-left: 10%;
+  width: 70%;
+  margin-top: 40px;
 }
 
 .cart-item {
@@ -33,19 +39,7 @@
   justify-content: space-evenly;
 }
 
-.remove-button {
-  background: none;
-  border: none;
-  color: #000;
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: 16px; /* Adjust font size as needed */
-  padding: 5px 10px; /* Add padding for better clickability */
-}
 
-.remove-button {
-  color: #555; /* Optional: Change color on hover for better user experience */
-}
 
 .count-handler {
   display: flex;
@@ -85,13 +79,55 @@
   color: white;
 }
 
+.remove-button {
+    background-color: transparent;
+    border: none;
+    color: #000;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 18px; /* Adjust font size as needed */
+    padding: 5px 10px; /* Add padding for better clickability */
+  }
+  
+  .remove-button:hover {
+    background-color: rgb(19, 19, 19);
+    color: white; /* Optional: Change color on hover for better user experience */
+  }
+
+.checkout {
+  width: 30%;
+  margin-top: 40px;
+  padding: 20px;
+  padding-right: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.checkout p {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
 .checkout button {
-  width: 150px;
-  height: 50px;
-  background-color: rgb(19, 19, 19);
+  width: 100%;
+  background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 8px;
-  margin: 10px;
+  padding: 10px 0;
+  font-size: 16px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.checkout button:hover {
+  background-color: #0056b3;
 }
