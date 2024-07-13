@@ -3,6 +3,8 @@ import { IProduct } from "../models/interface";
 import { useGetProducts } from "../hooks/useGetProducts";
 import axios from "axios";
 import { useGetToken } from "../hooks/useGetToken";
+import { ProductErrors } from "../errors";
+import { useNavigate } from "react-router-dom";
 
 export interface IShopContext {
   addToCart: (itemID: string) => void;
@@ -41,6 +43,7 @@ export const ShopContextProvider = (props) => {
   const { products } = useGetProducts();
   const { headers } = useGetToken();
   const [availableMoney, setAvailableMoney] = useState<number>(0);
+  const navigate = useNavigate();
 
   const fetchAvailableMoney = async () => {
     try {
@@ -53,7 +56,7 @@ export const ShopContextProvider = (props) => {
 
       setAvailableMoney(res.data.availableMoney);
     } catch (err) {
-      alert("ERROR: Something Went Wrong");
+      console.log(err);
     }
   };
 
@@ -113,15 +116,53 @@ export const ShopContextProvider = (props) => {
 
   const getTotalAmount = () => {
     let amount = 0;
+    try {
+      for (const item in cartItems) {
+        let itemInfo: IProduct = products.find(
+          (product) => product._id === item
+        );
 
-    for (const item in cartItems) {
-      let itemInfo: IProduct = products.find((product) => product._id === item);
-      amount += itemInfo.price * cartItems[item];
+        amount += itemInfo.price * cartItems[item];
+      }
+    } catch (err) {
+      console.log(err);
     }
+
     return amount;
   };
 
-  const checkout = () => {};
+  const checkout = async () => {
+    const body = { customerID: localStorage.getItem("userID"), cartItems };
+
+    try {
+      await axios.post("http://localhost:3001/products/checkout", body, {
+        headers,
+      });
+
+      setCartItems({});
+
+      await fetchAvailableMoney();
+
+      navigate("/");
+    } catch (err) {
+      let errorMessage: string = "";
+      switch (err.response.data.type) {
+        case ProductErrors.NO_PRODUCT_FOUND:
+          errorMessage = "Product doesn't exist.";
+          break;
+        case ProductErrors.NOT_ENOUGH_STOCK:
+          errorMessage = "Product stock is not enough.";
+          break;
+        case ProductErrors.NO_AVAILABLE_MONEY:
+          errorMessage = "You don't have enough money.";
+          break;
+        default:
+          errorMessage = "Something went wrong.";
+      }
+
+      alert(`ERROR: ${errorMessage}`);
+    }
+  };
 
   const contextValue: IShopContext = {
     addToCart,

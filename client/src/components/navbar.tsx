@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { IShopContext, ShopContext } from "../context/shopContext";
 
 export const Navbar = () => {
-  const {availableMoney} = useContext<IShopContext>(ShopContext);
+  const { availableMoney } = useContext<IShopContext>(ShopContext);
 
   return (
     <div className="navbar">

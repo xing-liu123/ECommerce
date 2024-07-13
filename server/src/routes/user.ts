@@ -52,23 +52,6 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/available-money/:userID", async (req: Request, res: Response) => {
-  const { userID } = req.params;
-
-  try {
-    console.log(userID);
-    const user = await UserModel.findById(userID);
-
-    if (!user) {
-      res.status(400).json({ type: UserErrors.NO_USER_FOUND });
-    }
-
-    res.json({ availableMoney: user.availableMoney });
-  } catch (err) {
-    res.status(500).json({ err });
-  }
-});
-
 export const verifyToken = (
   req: Request,
   res: Response,
@@ -88,5 +71,21 @@ export const verifyToken = (
     return res.sendStatus(401);
   }
 };
+
+router.get("/available-money/:userID", verifyToken, async (req: Request, res: Response) => {
+  const { userID } = req.params;
+
+  try {
+    const user = await UserModel.findById(userID);
+
+    if (!user) {
+      res.status(400).json({ type: UserErrors.NO_USER_FOUND });
+    }
+
+    res.json({ availableMoney: user.availableMoney });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+});
 
 export { router as userRouter };
