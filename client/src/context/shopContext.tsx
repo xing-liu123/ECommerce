@@ -13,6 +13,7 @@ export interface IShopContext {
   deleteCartItem: (itemID: string) => void;
   getCartItemCount: (itemID: string) => number;
   availableMoney: number;
+  purchasedItems: IProduct[];
   getTotalAmount: () => number;
   checkout: () => void;
 }
@@ -24,6 +25,7 @@ const defaultVal: IShopContext = {
   deleteCartItem: () => null,
   getCartItemCount: () => 0,
   availableMoney: 0,
+  purchasedItems: [],
   getTotalAmount: () => null,
   checkout: () => null,
 };
@@ -43,6 +45,7 @@ export const ShopContextProvider = (props) => {
   const { products } = useGetProducts();
   const { headers } = useGetToken();
   const [availableMoney, setAvailableMoney] = useState<number>(0);
+  const [purchasedItems, setPurchasedItems] = useState<IProduct[]>([]);
   const navigate = useNavigate();
 
   const fetchAvailableMoney = async () => {
@@ -60,9 +63,25 @@ export const ShopContextProvider = (props) => {
     }
   };
 
+  const fetchPurchasedItems = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/products/purchased-items/${localStorage.getItem(
+          "userID"
+        )}`,
+        { headers }
+      );
+
+      setPurchasedItems(res.data.purchasedItems);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     fetchAvailableMoney();
-  }, []);
+    fetchPurchasedItems();
+  });
 
   // Save cart items to localStorage whenever they change
   useEffect(() => {
@@ -171,6 +190,7 @@ export const ShopContextProvider = (props) => {
     deleteCartItem,
     getCartItemCount,
     availableMoney,
+    purchasedItems,
     getTotalAmount,
     checkout,
   };
