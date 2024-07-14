@@ -5,6 +5,7 @@ import axios from "axios";
 import { useGetToken } from "../hooks/useGetToken";
 import { ProductErrors } from "../errors";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export interface IShopContext {
   addToCart: (itemID: string) => void;
@@ -16,6 +17,8 @@ export interface IShopContext {
   purchasedItems: IProduct[];
   getTotalAmount: () => number;
   checkout: () => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
 }
 
 const defaultVal: IShopContext = {
@@ -28,6 +31,8 @@ const defaultVal: IShopContext = {
   purchasedItems: [],
   getTotalAmount: () => null,
   checkout: () => null,
+  isAuthenticated: false,
+  setIsAuthenticated: () => null,
 };
 
 export const ShopContext = createContext<IShopContext>(defaultVal);
@@ -42,10 +47,14 @@ export const ShopContextProvider = (props) => {
     return {};
   });
 
+  const [cookies, setCookies] = useCookies(["access_token"]);
   const { products } = useGetProducts();
   const { headers } = useGetToken();
   const [availableMoney, setAvailableMoney] = useState<number>(0);
   const [purchasedItems, setPurchasedItems] = useState<IProduct[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    cookies.access_token !== null
+  );
   const navigate = useNavigate();
 
   const fetchAvailableMoney = async () => {
@@ -79,9 +88,18 @@ export const ShopContextProvider = (props) => {
   };
 
   useEffect(() => {
-    fetchAvailableMoney();
-    fetchPurchasedItems();
-  });
+    if (isAuthenticated) {
+      fetchAvailableMoney();
+      fetchPurchasedItems();
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      localStorage.clear();
+      setCookies("access_token", null);
+    }
+  }, [isAuthenticated]);
 
   // Save cart items to localStorage whenever they change
   useEffect(() => {
@@ -193,6 +211,8 @@ export const ShopContextProvider = (props) => {
     purchasedItems,
     getTotalAmount,
     checkout,
+    isAuthenticated,
+    setIsAuthenticated,
   };
 
   return (

@@ -1,9 +1,10 @@
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useState, useContext } from "react";
 import { UserErrors } from "../../errors";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
+import { ShopContext, IShopContext } from "../../context/shopContext";
 
 export const AuthPage = () => {
   return (
@@ -72,6 +73,7 @@ const Register = () => {
 const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { setIsAuthenticated } = useContext<IShopContext>(ShopContext);
   const [_, setCookies] = useCookies(["access_token"]);
   const navigate = useNavigate();
 
@@ -86,6 +88,7 @@ const Login = () => {
 
       setCookies("access_token", result.data.token);
       localStorage.setItem("userID", result.data.userID);
+      setIsAuthenticated(true);
       navigate("/");
     } catch (err) {
       let errorMessage: string = "";
