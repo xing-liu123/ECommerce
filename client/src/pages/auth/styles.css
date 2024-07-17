@@ -37,21 +37,21 @@ input {
 }
 
 button {
+  background-color: transparent;
+  border: 2px solid rgb(19, 19, 19);
+  color: rgb(19, 19, 19);
+  min-width: 100px;
   padding: 10px 20px;
-  font-size: 16px;
-  color: white;
-  background-color: #007bff;
-  border: none;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 16px;
+  font-weight: bold;
+  opacity: 0.7; /* Make the button slightly transparent */
+  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
-}
-
-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
+  background-color: rgb(19, 19, 19);
+  color: white;
+  cursor: pointer;
+  opacity: 1; /* Fully visible on hover */
+} 

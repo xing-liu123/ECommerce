@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
 import { IProduct } from "../models/interface";
-import { useGetProducts } from "../hooks/useGetProducts";
 import axios from "axios";
 import { useGetToken } from "../hooks/useGetToken";
 import { ProductErrors } from "../errors";
@@ -13,6 +12,7 @@ export interface IShopContext {
   updateCartItemCount: (newAmount: number, itemID: string) => void;
   deleteCartItem: (itemID: string) => void;
   getCartItemCount: (itemID: string) => number;
+  products: IProduct[];
   availableMoney: number;
   purchasedItems: IProduct[];
   getTotalAmount: () => number;
@@ -27,6 +27,7 @@ const defaultVal: IShopContext = {
   updateCartItemCount: () => null,
   deleteCartItem: () => null,
   getCartItemCount: () => 0,
+  products: [],
   availableMoney: 0,
   purchasedItems: [],
   getTotalAmount: () => null,
@@ -48,7 +49,7 @@ export const ShopContextProvider = (props) => {
   });
 
   const [cookies, setCookies] = useCookies(["access_token"]);
-  const { products } = useGetProducts();
+  const [products, setProducts] = useState<IProduct[]>([]);
   const { headers } = useGetToken();
   const [availableMoney, setAvailableMoney] = useState<number>(0);
   const [purchasedItems, setPurchasedItems] = useState<IProduct[]>([]);
@@ -72,6 +73,18 @@ export const ShopContextProvider = (props) => {
     }
   };
 
+  const fetchProducts = async () => {
+    try {
+      const fetchProducts = await axios.get("http://localhost:3001/products", {
+        headers,
+      });
+      setProducts(fetchProducts.data.products);
+    } catch (err) {
+      alert("Error: Something went wrong.");
+    }
+  };
+
+
   const fetchPurchasedItems = async () => {
     try {
       const res = await axios.get(
@@ -89,6 +102,7 @@ export const ShopContextProvider = (props) => {
 
   useEffect(() => {
     if (isAuthenticated) {
+      fetchProducts();
       fetchAvailableMoney();
       fetchPurchasedItems();
     }
@@ -96,6 +110,7 @@ export const ShopContextProvider = (props) => {
 
   useEffect(() => {
     if (!isAuthenticated) {
+      localStorage.removeItem('cartItems');
       localStorage.clear();
       setCookies("access_token", null);
     }
@@ -207,6 +222,7 @@ export const ShopContextProvider = (props) => {
     updateCartItemCount,
     deleteCartItem,
     getCartItemCount,
+    products,
     availableMoney,
     purchasedItems,
     getTotalAmount,
