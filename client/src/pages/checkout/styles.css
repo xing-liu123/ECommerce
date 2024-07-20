@@ -1,3 +1,11 @@
+.paypal-container {
+  margin-top: 30px;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .shopping-cart {
   display: flex;
 }
@@ -18,12 +26,12 @@
   align-items: center;
   box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   border-radius: 25px;
-  margin: 30px;
+  margin: 20px;
+  padding: 20px 20px;
 }
 
 .cart-item img {
   width: 200px;
-  margin-left: 50px;
 }
 
 .cart-item .description {
@@ -131,3 +139,4 @@
 .checkout button:hover {
   background-color: #0056b3;
 }
+

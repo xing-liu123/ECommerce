@@ -17,7 +17,10 @@ export const CheckoutPage = () => {
   return (
     <div>
       {paypalCheckout ? (
-        <PayPal />
+        <div className="paypal-container">
+          {" "}
+          <PayPal />
+        </div>
       ) : (
         <div>
           {totalAmount > 0 ? (

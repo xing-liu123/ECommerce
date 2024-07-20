@@ -17,7 +17,7 @@ export const PurchasedItemsPage = () => {
             <p> ${item.price}</p>
             <button onClick={() => addToCart(item._id)}>
               {" "}
-              Purchased Again {count > 0 && <p> ({count}) </p>}
+              Purchase Again {count > 0 && <p> ({count}) </p>}
             </button>
           </div>
         );
